@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose'; // Import mongoose for database operations
+import mongoose from 'mongoose'; 
 import authRoutes from './Routes/auth.js';
 import protectedRoute from './Routes/protectedRoute.js';
 
@@ -10,7 +10,7 @@ app.use(express.json());
 
 const port = 3000;
 const dbName = "Tic-Tac-Toe";
-const dbUrl = 'mongodb://localhost:27017/Tic-Tac-Toe'; // Use this for MongoDB connection URL
+const dbUrl = 'mongodb://localhost:27017/Tic-Tac-Toe'; 
 
 // Mongoose connection
 mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -25,7 +25,6 @@ mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
     process.exit(1);
   });
 
-// Define User schema for Mongoose
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   games: [
@@ -48,14 +47,14 @@ const User = mongoose.model("games", userSchema);
 
 // Route to save or update game
 app.post("/api/games", async (req, res) => {
-  const { username, game } = req.body; // game includes opponent, moves, winner, timestamp
+  const { username, game } = req.body; 
 
   try {
-    // Check if user document exists
+  
     const user = await User.findOne({ username });
 
     if (user) {
-      // Append new game to the existing user's games array
+
       user.games.push(game);
       await user.save();
       res.status(200).json({ message: "Game added to user's record!" });
@@ -94,14 +93,14 @@ let db;
 app.get("/games", async (req, res) => {
   try {
     const collection = db.collection("games");
-    const games = await collection.find({}).toArray(); // Fetch all games
+    const games = await collection.find({}).toArray(); 
     res.send(games)
   } catch (error) {
-    console.error("Error retrieving games:", error); // Log the error for debugging
-    return res.status(500).json({ error: "Failed to retrieve games." }); // Send a 500 error for any failure
+    console.error("Error retrieving games:", error); 
+    return res.status(500).json({ error: "Failed to retrieve games." }); 
   }
 });
 
-// Routes
-app.use('/auth', authRoutes);  // Auth routes (Signup, Login)
-app.use('/api', protectedRoute);  // Protected route (JWT required)
+
+app.use('/auth', authRoutes);  
+app.use('/api', protectedRoute);  
